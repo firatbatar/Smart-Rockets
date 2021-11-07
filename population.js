@@ -66,6 +66,7 @@ class Population {
     }
 
     calcFitness() {
+        this.totalFitness = 0; // Reset the total fitness
         // Calculate the fitness for every member of the population
         for (let i = 0; i < this.population.length; i++) {
             this.population[i].calcFitness();
@@ -84,10 +85,10 @@ class Population {
         }
     }
 
-    update() {
+    update(target, obstacles) {
         // Update the every member of the population
         for (let i = 0; i < this.population.length; i++) {
-            this.population[i].update();
+            this.population[i].update(target, obstacles);
         }
     }
 }

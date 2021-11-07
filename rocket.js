@@ -15,6 +15,7 @@ class Rocket {
         this.bestDistance = 10**4;
         this.reachTime = 0;
         this.hitTarget = false;
+        this.hitObstacle = false;
         this.fitness;
     }
 
@@ -30,8 +31,11 @@ class Rocket {
         // Reverse the bestDistance * reachTime
         this.fitness = 1 / (this.bestDistance * this.reachTime);
 
-        // If it hit the target double the distance
+        // If it hit the target double the fitness
         if (this.hitTarget) this.fitness *= 2;
+
+        // IF it hit an obstacle reduce the fitness
+        if (this.hitObstacle) this.fitness *= 0.1;
     }
 
     checkTarget() {
@@ -49,14 +53,21 @@ class Rocket {
         }
     }
 
+    checkObstacle(obstacles) {
+        // Check for if it hit an obstacle
+        for (let i = 0; i < obstacles.length; i++) {
+            if (obstacles[i].contains(this.pos.x, this.pos.y)) this.hitObstacle = true;
+        }
+    }
+
 
     applyForce() {
         let force = this.DNA.genes[this.age]; 
         this.acc.add(force);
     }
 
-    update() {
-        if (!this.hitTarget) {    
+    update(target, obstacles) {
+        if (!this.hitTarget && !this.hitObstacle) {    
             this.applyForce();
             this.pos.add(this.vel);
             this.vel.add(this.acc);
@@ -65,25 +76,30 @@ class Rocket {
             this.age++;
 
             // Check the target
-            this.checkTarget();
+            this.checkTarget(target);
+
+            // Check for obstacles
+            this.checkObstacle(obstacles);
         }    
     }
 
 
     show() {
-        let dirAngle = this.vel.heading() + PI / 2;
-        
-        push();
-        fill(175);
+        if (!this.hitObstacle){
+            let dirAngle = this.vel.heading() + PI / 2;
+            
+            push();
+            fill(175);
 
-        translate(this.pos.x, this.pos.y);
-        rotate(dirAngle);
+            translate(this.pos.x, this.pos.y);
+            rotate(dirAngle);
 
-        beginShape(TRIANGLES);
-        vertex(0, -this.size * 2);
-        vertex(-this.size, this.size * 2);
-        vertex(this.size, this.size * 2);
-        endShape();
-        pop();
+            beginShape(TRIANGLES);
+            vertex(0, -this.size * 2);
+            vertex(-this.size, this.size * 2);
+            vertex(this.size, this.size * 2);
+            endShape();
+            pop();
+        }
     }
 }
