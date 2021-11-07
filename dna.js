@@ -12,6 +12,7 @@ class DNA {
                 this.genes[i] = p5.Vector.random2D().normalize();
                 this.genes[i].mult(random(0, this.maxStrength));
             }
+            this.genes[0].normalize(); // Give boost at start
         }
 
     }
@@ -23,6 +24,8 @@ class DNA {
             if (chance < this.mutateChance) {
                 this.genes[i] = p5.Vector.random2D().normalize();
                 this.genes[i].mult(random(0, this.maxStrength));
+
+                if (i == 0) this.genes[i].normalize();
             }
         }
     }
