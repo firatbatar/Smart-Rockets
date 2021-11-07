@@ -11,7 +11,7 @@ let population;
 let popSize = 50;
 let lifeTime = 300;
 let cycle = 0;
-let mutateChance = 0.01;
+let mutateChance = 0.03;
 let maxStrength = 0.2;
 let generation = 1;
 let obstacles = [];
@@ -72,9 +72,6 @@ function draw() {
 
     // Calculate the fitness
     population.calcFitness();
-
-    // Create a mating pool
-    population.createMatingPool();
 
     // Create the next generation
     population.nextGeneration();

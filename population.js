@@ -2,12 +2,11 @@ class Population {
     constructor(popSize, mutateChance, maxStrength) {
         this.popSize = popSize;
 
-        
         this.nextPopulation = [];
-        
+
+        this.fitnessA = [];
         this.totalFitness = 0;
         this.averageFitness = 0;
-        this.matingPool = [];
         
         this.mutateChance = mutateChance;
         this.maxStrength = maxStrength;
@@ -32,12 +31,20 @@ class Population {
 
     nextGeneration() {
         this.nextPopulation = [];  // Reset the next generation
+        
+        // Get two best fitness score
+        let maxFit1 = max(this.fitnessA);
+        let maxFit1Index = this.fitnessA.indexOf(maxFit1);
+        this.fitnessA.splice(maxFit1Index, 1);
+
+        let maxFit2 = max(this.fitnessA);
+        let maxFit2Index = this.fitnessA.indexOf(maxFit2);
 
         // Reproduce popSize times
         for (let n = 0; n < this.popSize; n++) {
             // Select two "parent" from mating pool
-            let parent1 = random(this.matingPool);
-            let parent2 = random(this.matingPool);
+            let parent1 = this.population[maxFit1Index];
+            let parent2 = this.population[maxFit2Index];
             
             // Create a child with crossover
             let child = this.crossover(parent1, parent2);
@@ -53,24 +60,13 @@ class Population {
         this.population = this.nextPopulation.slice();
     }
 
-    createMatingPool() {
-        this.matingPool = []  // Reset the mating pool
-        // Calculate the relative fitness % for every member of the population
-        for (let i = 0; i < this.popSize; i++) {
-            let relFitness = 100 * (this.population[i].fitness / this.totalFitness)
-            // Add to mating pool according to relative fitness to arrange select chance
-            for (let j = 0; j < relFitness; j++) {
-                this.matingPool.push(this.population[i]);
-            }
-        }
-    }
-
     calcFitness() {
         this.totalFitness = 0; // Reset the total fitness
         // Calculate the fitness for every member of the population
         for (let i = 0; i < this.population.length; i++) {
             this.population[i].calcFitness();
             this.totalFitness += this.population[i].fitness;
+            this.fitnessA[i] = this.population[i].fitness;
         }
 
 
