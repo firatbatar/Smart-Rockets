@@ -5,7 +5,7 @@ class Population {
         
         this.nextPopulation = [];
         
-        this.totalFitness = 0;
+        this.maxFitness = 0;
         this.averageFitness = 0;
         this.matingPool = [];
         
@@ -55,9 +55,9 @@ class Population {
 
     createMatingPool() {
         this.matingPool = []  // Reset the mating pool
-        // Calculate the relative fitness % for every member of the population
+        // Calculate a relative fitness  for every member of the population
         for (let i = 0; i < this.popSize; i++) {
-            let relFitness = 100 * (this.population[i].fitness / this.totalFitness)
+            let relFitness = floor(map(this.population[i].fitness, 0, this.maxFitness, 0, 1) * 100)
             // Add to mating pool according to relative fitness to arrange select chance
             for (let j = 0; j < relFitness; j++) {
                 this.matingPool.push(this.population[i]);
@@ -66,16 +66,14 @@ class Population {
     }
 
     calcFitness() {
-        this.totalFitness = 0; // Reset the total fitness
+        this.maxFitness = 0; // Reset the max fitness
         // Calculate the fitness for every member of the population
         for (let i = 0; i < this.population.length; i++) {
             this.population[i].calcFitness();
-            this.totalFitness += this.population[i].fitness;
+            
+            // Find the max fitness
+            if (this.population[i].fitness > this.maxFitness) this.maxFitness = this.population[i].fitness;
         }
-
-
-        // Calculate the average fitness
-        this.averageFitness = this.totalFitness / this.popSize;
     }
 
     show() {
