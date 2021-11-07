@@ -54,7 +54,7 @@ function draw() {
   fill(255);
   text(`Generation #${generation}`, 20, height-60);
   text(`Remaining lifetime: ${lifeTime-cycle}`, 20, height-40);
-  text(`Average Fitness: ${population.averageFitness}`, 20, height-20);
+  text(`Maximum Fitness: ${population.maxFitness}`, 20, height-20);
 
 
   // Draw the rockets

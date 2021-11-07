@@ -6,7 +6,7 @@ class Population {
         this.nextPopulation = [];
         
         this.totalFitness = 0;
-        this.averageFitness = 0;
+        this.maxFitness = 0;
         this.matingPool = [];
         
         this.mutateChance = mutateChance;
@@ -71,11 +71,13 @@ class Population {
         for (let i = 0; i < this.population.length; i++) {
             this.population[i].calcFitness();
             this.totalFitness += this.population[i].fitness;
+
+            // Find the maximum fitness
+            if (this.population[i].fitness > this.maxFitness) this.maxFitness = this.population[i].fitness;
         }
 
 
-        // Calculate the average fitness
-        this.averageFitness = this.totalFitness / this.popSize;
+        
     }
 
     show() {
